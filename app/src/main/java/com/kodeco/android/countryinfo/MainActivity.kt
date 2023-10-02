@@ -3,6 +3,7 @@ package com.kodeco.android.countryinfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.kodeco.android.countryinfo.model.RetrofitInstance
 import com.kodeco.android.countryinfo.ui.components.CountryInfoScreen
 import com.kodeco.android.countryinfo.ui.theme.MyApplicationTheme
 
@@ -12,12 +13,14 @@ class MainActivity : ComponentActivity() {
 
         // TODO build out the retrofit service and reference it here.
         //  Pass the service in to the CountryInfoScreen composable below.
+        val countryService = RetrofitInstance.countryService
+
 
         setContent {
             MyApplicationTheme {
                 // TODO complete the composable content and provide
                 //  models for Country, CountryName, and CountryFlags.
-                CountryInfoScreen()
+                CountryInfoScreen(countryService)
             }
         }
     }
