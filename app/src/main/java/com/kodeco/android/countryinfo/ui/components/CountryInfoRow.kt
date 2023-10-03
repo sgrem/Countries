@@ -13,6 +13,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kodeco.android.countryinfo.model.Country
+import com.kodeco.android.countryinfo.model.CountryFlags
+import com.kodeco.android.countryinfo.model.CountryName
 
 // TODO fill out CountryInfoRow
 @Composable
@@ -30,7 +32,16 @@ fun CountryInfoRow(country: Country) {
     }
 }
 
+val mockCountry = Country(
+        CountryName("USA"),
+        listOf("Washington, D.C."),
+        0,
+        0.0,
+        CountryFlags("No Flag")
+    )
 // TODO fill out the preview.
 @Preview
 @Composable
-fun CountryInfoRowPreview() { }
+fun CountryInfoRowPreview() {
+    CountryInfoRow(country = mockCountry)
+}

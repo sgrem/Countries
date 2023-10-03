@@ -10,8 +10,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 import com.kodeco.android.countryinfo.model.Country
+import com.kodeco.android.countryinfo.model.CountryFlags
+import com.kodeco.android.countryinfo.model.CountryName
 import com.kodeco.android.countryinfo.model.CountryService
 import kotlinx.coroutines.launch
+import retrofit2.Response
 
 // TODO fill out CountryInfoScreen
 @Composable
@@ -34,7 +37,40 @@ fun CountryInfoScreen(countryService: CountryService) {
     }
 }
 
+val mockCountries = listOf(
+    Country(
+        CountryName("USA"),
+        listOf("Washington, D.C."),
+        0,
+        0.0,
+        CountryFlags("No Flag")
+    ),
+    Country(
+        CountryName("Canada"),
+        listOf("Ottawa"),
+        0,
+        0.0,
+        CountryFlags("No Flag")
+    ),
+    Country(
+        CountryName("UK"),
+        listOf("London"),
+        0,
+        0.0,
+        CountryFlags("No Flag")
+    ),
+)
+
+class MockCountryService : CountryService {
+    override suspend fun getAllCountries(): Response<List<Country>> {
+        return Response.success(mockCountries)
+    }
+}
+
 // TODO fill out the preview.
 @Preview
 @Composable
-fun CountryInfoScreenPreview() { }
+fun CountryInfoScreenPreview() {
+    val mockService = MockCountryService()
+    CountryInfoScreen(countryService = mockService)
+}
