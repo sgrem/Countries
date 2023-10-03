@@ -2,9 +2,12 @@ package com.kodeco.android.countryinfo.model
 
 import com.squareup.moshi.JsonClass
 
+
 data class CountryName(val common: String)
 
+
 data class CountryFlags(val png: String)
+
 
 @JsonClass(generateAdapter = true)
 data class Country(

@@ -17,17 +17,29 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 
-// TODO fill out CountryInfoScreen
+// DONE: TODO fill out CountryInfoScreen
 @Composable
 fun CountryInfoScreen(countryService: CountryService) {
     var countries by rememberSaveable { mutableStateOf(listOf<Country>()) }
 
     LaunchedEffect(Unit) {
-        val response = withContext(Dispatchers.IO) {
-            countryService.getAllCountries()
-        }
-        if (response.isSuccessful) {
-            countries = response.body() ?: listOf()
+        try {
+            // preview only works in interactive mode when using Dispatchers.IO
+            val response = if(countryService is MockCountryService) {
+                countryService.getAllCountries()
+            } else {
+                withContext(Dispatchers.IO) {
+                    countryService.getAllCountries()
+                }
+            }
+            if (response.isSuccessful) {
+                countries = response.body() ?: listOf()
+            } else {
+                println("Error: ${response.code()} ${response.message()}")
+            }
+        } catch (e: Exception) {
+            // TODO("Not yet implemented")
+            println(e.message)
         }
     }
 
