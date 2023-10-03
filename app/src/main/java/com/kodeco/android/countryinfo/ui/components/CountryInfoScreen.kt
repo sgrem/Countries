@@ -13,7 +13,8 @@ import com.kodeco.android.countryinfo.model.Country
 import com.kodeco.android.countryinfo.model.CountryFlags
 import com.kodeco.android.countryinfo.model.CountryName
 import com.kodeco.android.countryinfo.model.CountryService
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import retrofit2.Response
 
 // TODO fill out CountryInfoScreen
@@ -22,13 +23,14 @@ fun CountryInfoScreen(countryService: CountryService) {
     var countries by rememberSaveable { mutableStateOf(listOf<Country>()) }
 
     LaunchedEffect(Unit) {
-        launch {
-            val response = countryService.getAllCountries()
-            if (response.isSuccessful) {
-                countries = response.body() ?: listOf()
-            }
+        val response = withContext(Dispatchers.IO) {
+            countryService.getAllCountries()
+        }
+        if (response.isSuccessful) {
+            countries = response.body() ?: listOf()
         }
     }
+
 
     LazyColumn {
         items(countries) { country ->
