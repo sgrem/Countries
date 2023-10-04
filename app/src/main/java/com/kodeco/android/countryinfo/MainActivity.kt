@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.kodeco.android.countryinfo.model.RetrofitInstance
+import com.kodeco.android.countryinfo.data.RetrofitInstance
 import com.kodeco.android.countryinfo.ui.components.CountryErrorScreen
 import com.kodeco.android.countryinfo.ui.components.CountryInfoScreen
 import com.kodeco.android.countryinfo.ui.theme.MyApplicationTheme
@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
                     MyApplicationTheme {
                         // TODO complete the composable content and provide
                         //  models for Country, CountryName, and CountryFlags.
-                        CountryInfoScreen(countryService)
+                        CountryInfoScreen(navController, countryService)
                     }
                 }
             }

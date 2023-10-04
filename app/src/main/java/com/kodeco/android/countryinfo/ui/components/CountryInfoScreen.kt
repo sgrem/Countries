@@ -6,50 +6,62 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import com.kodeco.android.countryinfo.model.Country
 import com.kodeco.android.countryinfo.model.CountryFlags
 import com.kodeco.android.countryinfo.model.CountryName
-import com.kodeco.android.countryinfo.model.CountryService
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.kodeco.android.countryinfo.data.CountryService
+import com.kodeco.android.countryinfo.data.CountryServiceStatus
+import com.kodeco.android.countryinfo.data.countryServiceWorker
 import retrofit2.Response
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
+
 
 // DONE: TODO fill out CountryInfoScreen
 @Composable
-fun CountryInfoScreen(countryService: CountryService) {
+fun CountryInfoScreen(
+    navController: NavController?,
+    countryService: CountryService
+) {
     var countries by rememberSaveable { mutableStateOf(listOf<Country>()) }
+    var countryServiceStatus: CountryServiceStatus by remember { mutableStateOf(CountryServiceStatus.Ready) }
 
     LaunchedEffect(Unit) {
-        try {
-            // preview only works in interactive mode when using Dispatchers.IO
-            val response = if(countryService is MockCountryService) {
-                countryService.getAllCountries()
-            } else {
-                withContext(Dispatchers.IO) {
-                    countryService.getAllCountries()
+        countryServiceStatus = countryServiceWorker(countryService)
+    }
+        when (val status = countryServiceStatus) {
+            is CountryServiceStatus.Ready -> {}
+            is CountryServiceStatus.Success -> {
+                countries = status.response.body() ?: listOf()
+                LazyColumn {
+                    items(countries) { country ->
+                        CountryInfoRow(country)
+                    }
                 }
             }
-            if (response.isSuccessful) {
-                countries = response.body() ?: listOf()
-            } else {
-                println("Error: ${response.code()} ${response.message()}")
+
+            is CountryServiceStatus.Error -> {
+                println("Error: ${status.response.code()} ${status.response.message()}")
+                navController?.navigate("error_screen")
             }
-        } catch (e: Exception) {
-            // TODO("Not yet implemented")
-            println(e.message)
+
+            is CountryServiceStatus.ServiceException -> {
+                println(status.countryServiceException.message)
+                if (status.countryServiceException is UnknownHostException || status.countryServiceException is SocketTimeoutException) {
+                    // TODO No network connection
+                }
+                navController?.navigate("error_screen")
+            }
         }
     }
 
 
-    LazyColumn {
-        items(countries) { country ->
-            CountryInfoRow(country)
-        }
-    }
-}
+
 
 val mockCountries = listOf(
     Country(
@@ -86,5 +98,5 @@ class MockCountryService : CountryService {
 @Composable
 fun CountryInfoScreenPreview() {
     val mockService = MockCountryService()
-    CountryInfoScreen(countryService = mockService)
+    CountryInfoScreen(null, countryService = mockService)
 }
