@@ -31,7 +31,7 @@ suspend fun countryServiceWorker(countryService: CountryService) : CountryServic
 }
 
     sealed class CountryServiceStatus {
-        data object Ready: CountryServiceStatus()
+        data object Loading: CountryServiceStatus()
         data class Success(val response: Response<List<Country>>) : CountryServiceStatus()
         data class Error(val response: Response<List<Country>>) : CountryServiceStatus()
         data class ServiceException(val countryServiceException: Exception) : CountryServiceStatus()

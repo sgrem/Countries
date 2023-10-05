@@ -76,6 +76,7 @@ dependencies {
     implementation(libs.retrofit.moshi)
     implementation(libs.retrofit.moshi.converter)
     implementation(libs.coil)
+    implementation(libs.google.material)
 
     ksp (libs.moshiCodeGen)
 
