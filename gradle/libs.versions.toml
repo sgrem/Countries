@@ -64,6 +64,7 @@ retrofit-moshi = {module="com.squareup.moshi:moshi-kotlin", version.ref="moshi" 
 retrofit-moshi-converter = {module="com.squareup.retrofit2:converter-moshi", version.ref="retrofit" }
 moshiCodeGen = {module="com.squareup.moshi:moshi-kotlin-codegen", version.ref="moshi" }
 google-material = { group = "com.google.android.material", name = "material", version = "1.9.0" }
+gson = { group = "com.google.code.gson", name = "gson", version = "2.10.1" }
 
 
 [plugins]

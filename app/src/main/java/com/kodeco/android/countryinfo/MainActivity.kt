@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.kodeco.android.countryinfo.data.RetrofitInstance
+import com.kodeco.android.countryinfo.ui.components.CountryDetailsScreen
 import com.kodeco.android.countryinfo.ui.components.CountryErrorScreen
 import com.kodeco.android.countryinfo.ui.components.CountryInfoScreen
 import com.kodeco.android.countryinfo.ui.theme.MyApplicationTheme
@@ -32,6 +33,10 @@ class MainActivity : ComponentActivity() {
                         //  models for Country, CountryName, and CountryFlags.
                         CountryInfoScreen(navController, countryService)
                     }
+                }
+                composable("country_details_screen/{encodedJsonString}") { backStackEntry ->
+                    val encodedJsonString = backStackEntry.arguments?.getString("encodedJsonString")
+                    CountryDetailsScreen(encodedJsonString )
                 }
             }
         }

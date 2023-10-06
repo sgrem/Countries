@@ -39,40 +39,43 @@ fun CountryInfoScreen(
     LaunchedEffect(Unit) {
         countryServiceStatus = countryServiceWorker(countryService)
     }
-        when (val status = countryServiceStatus) {
-            is CountryServiceStatus.Loading -> {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    CircularProgressIndicator()  // This serves as the placeholder
-                }
-            }
-            is CountryServiceStatus.Success -> {
-                countries = status.response.body() ?: listOf()
-                LazyColumn {
-                    items(countries) { country ->
-                        CountryInfoRow(country)
-                    }
-                }
-            }
-
-            is CountryServiceStatus.Error -> {
-                println("Error: ${status.response.code()} ${status.response.message()}")
-                navController?.navigate("error_screen")
-            }
-
-            is CountryServiceStatus.ServiceException -> {
-                println(status.countryServiceException.message)
-                if (status.countryServiceException is UnknownHostException || status.countryServiceException is SocketTimeoutException) {
-                    // TODO No network connection
-                }
-                navController?.navigate("error_screen")
+    when (val status = countryServiceStatus) {
+        is CountryServiceStatus.Loading -> {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                CircularProgressIndicator()  // This serves as the placeholder
             }
         }
+
+        is CountryServiceStatus.Success -> {
+            countries = status.response.body() ?: listOf()
+            LazyColumn {
+                items(countries) { country ->
+                    CountryInfoRow(
+                        country,
+                        navController,
+                    )
+
+                }
+            }
+        }
+
+        is CountryServiceStatus.Error -> {
+            println("Error: ${status.response.code()} ${status.response.message()}")
+            navController?.navigate("error_screen")
+        }
+
+        is CountryServiceStatus.ServiceException -> {
+            println(status.countryServiceException.message)
+            if (status.countryServiceException is UnknownHostException || status.countryServiceException is SocketTimeoutException) {
+                // TODO No network connection
+            }
+            navController?.navigate("error_screen")
+        }
     }
-
-
+}
 
 
 val mockCountries = listOf(
