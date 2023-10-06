@@ -26,7 +26,10 @@ import com.kodeco.android.countryinfo.model.CountryName
 fun CountryDetailsScreen(encodedJsonString: String?) {
 
 // TODO next lines aren't finished
-    val country = if (encodedJsonString == null) mockCountry else Gson().fromJson(Uri.decode(encodedJsonString), Country::class.java)
+    val country = if (encodedJsonString == null)
+        mockCountry
+    else
+        Gson().fromJson(Uri.decode(encodedJsonString), Country::class.java)
 
 
     Column(
